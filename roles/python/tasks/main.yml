@@ -1,0 +1,37 @@
+---
+- name: Install deps (Debian)
+  become: true
+  package:
+    name: " {{ python_deps }}"
+    state: latest
+
+- name: Ensure Pyenv is installed
+  stat:
+    path: ~/.pyenv
+  register: pyenv_details
+
+- name: Download pyenv's install script
+  get_url:
+    url: https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer
+    dest: "{{ tmp_dir }}"
+    mode: 0755
+  when: pyenv_details.stat.exists == false
+
+- name: Run pyenv's install script
+  shell: "{{ tmp_dir }}/pyenv-installer"
+  when: pyenv_details.stat.exists == false
+
+- name: Delete nvm's install script
+  file:
+    path: "{{ tmp_dir }}/pyenv-installer"
+    state: absent
+
+- name: Update .bashrc
+  lineinfile:
+    backup: yes
+    dest: ~/.bashrc
+    line: '{{ item }}'
+  with_items:
+    - 'export PATH="$HOME/.pyenv/bin:$PATH"'
+    - 'eval "$(pyenv init --path)"'
+    - 'eval "$(pyenv virtualenv-init -)"'

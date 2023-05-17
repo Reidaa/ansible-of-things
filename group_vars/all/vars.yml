@@ -1,0 +1,4 @@
+username: thomas
+tmp_dir: "/home/{{ username }}/tmp"
+packages:
+  - emacs

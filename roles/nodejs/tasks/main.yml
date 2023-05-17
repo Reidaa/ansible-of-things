@@ -1,0 +1,46 @@
+---
+- name: Ensure NVM is installed
+  become: false
+  shell: "source /home/thomas/.nvm/nvm.sh && nvm -v"
+  args:
+    executable: /bin/bash
+  register: nvm_installed
+  ignore_errors: true
+  changed_when: false
+
+- name: Download nvm's install script
+  get_url:
+    url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh
+    dest: "{{ tmp_dir }}"
+    mode: 0755
+  when: nvm_installed.rc != 0
+
+- name: Run nvm's install script
+  shell: "{{ tmp_dir }}/install.sh"
+  when: nvm_installed.rc != 0
+
+- name: Delete nvm's install script
+  file:
+    path: "{{ tmp_dir }}/install.sh"
+    state: absent
+  when: nvm_installed.rc != 0
+
+- name: Ensure node is installed
+  become: false
+  shell: "source ~/.nvm/nvm.sh && node -v"
+  args:
+    executable: /bin/bash
+  register: node_installed
+  ignore_errors: true
+  changed_when: false
+
+- name: Install Node.js latest LTS version
+  become: false
+  shell: "source ~/.nvm/nvm.sh && nvm install --lts"
+  args:
+    executable: /bin/bash
+  when: 
+    - nvm_installed.rc != 0
+    - node_installed.rc != 0 
+
+# - name: Install Node.js

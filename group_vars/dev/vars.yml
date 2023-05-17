@@ -1,0 +1,22 @@
+packages:
+  - emacs
+  - htop
+  - speedtest-cli
+  - apt-transport-https
+  - build-essential
+  - ca-certificates
+  - clang
+  - cmake
+  - curl
+  - gcc
+  - gdb
+  - git
+  - gource
+  - make
+  - mlocate
+  - software-properties-common
+  - tar
+  - tree
+  - valgrind
+  - zip
+  - unzip

@@ -1,0 +1,18 @@
+
+
+- name: Disable SSH password auth
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#PasswordAuthentication yes"
+    line: "PasswordAuthentication no"
+    validate: "sshd -t -f %s"
+  # register: sshd_config
+  notify: restart ssh
+
+
+- name: Disable SSH root login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#PermitRootLogin"
+    line: "PermitRootLogin no"
+    validate: "sshd -t -f %s"
