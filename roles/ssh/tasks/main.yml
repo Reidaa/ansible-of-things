@@ -1,5 +1,3 @@
-
-
 - name: Disable SSH password auth
   lineinfile:
     dest: /etc/ssh/sshd_config
@@ -8,7 +6,6 @@
     validate: "sshd -t -f %s"
   # register: sshd_config
   notify: restart ssh
-
 
 - name: Disable SSH root login
   lineinfile:
